@@ -4,15 +4,21 @@ const timer = document.querySelector('#timer');
 const mainDisplayEl = document.querySelector('#mainDisplay');
 
 const question = [
-  "What is a HTML?",
-  "What is CSS?"
-]
-
-const options = [
   {
-    1: "A game",
-    2:"A coding lenguage",
-    3:"A car"
+    ques: "What color is the sky",
+    a: "Green",
+    b: "Blue",
+    c: "Yellow",
+    d: "Black",
+    answer: "Blue"    
+  },
+  {
+    ques: "What food are the apples",
+    a: "Fruit",
+    b: "Veggie",
+    c: "Meat",
+    d: "Diary",
+    answer: "Fruit"
   }
 ]
 
@@ -43,6 +49,8 @@ const initialGreating = function() {
 
   mainDisplayEl.appendChild(initialDivEl)
 };
+
+
 
 
 const createQuestion = function() {
