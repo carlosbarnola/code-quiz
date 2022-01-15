@@ -10,46 +10,6 @@ body {
 
 }
 
-/* header {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    list-style: none;
-    color: rgb(162, 87, 233);
-    height: 60px;
-    font-size: 2vw;
-    padding-top: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
-    font-family: 'Merienda';
-    font-size: 22px;
-  } */
-
-/* .btnHeader {
-    border-radius: 10px;
-    background-color: white;
-    text-decoration: none;
-    border: 0;
-    outline: 0;
-    color: rgb(162, 87, 233);
-    font-family: 'Merienda';
-    font-size: 20px;
-} */
-
-/* .btnHeader:hover {
-    background-color: pink;    
-} */
-
-/* .btn {
-    border-radius: 12px;
-    border: 0;
-    outline: 0;
-    background-color: purple;
-    color: white;
-    font-family: 'Merienda';
-    font-size: 10px;
-} */
-
 #mainDiv {
     margin-left: 25%;
     margin-right: 25%;
