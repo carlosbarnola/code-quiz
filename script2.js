@@ -1,64 +1,193 @@
-let questionIdCounter = 0;
+let qCounter = 0;
+let score = 0;
 const startBtn = document.querySelector('#start-btn');
-const timer = document.querySelector('#timer');
+let timerEl = document.querySelector('#timer');
 const mainDisplayEl = document.querySelector('#mainDisplay');
+const check = document.querySelector('#checkDiv')
+const saveBtnEl = document.querySelector("#saveBtn")
+const viewScoreEl = document.querySelector('#view-score')
+let playersArray = []
+let timeleft = 10;
 
-const question = [
+
+var mainQuestion = [
   {
-    ques: "What color is the sky",
-    a: "Green",
-    b: "Blue",
-    c: "Yellow",
-    d: "Black",
-    answer: "Blue"    
+    ques: "Which of the following options is a computer lenguage?",
+    choices: ["English", "HTML", "Spanish", "PIOter"],
+    answer: "HTML"    
   },
   {
-    ques: "What food are the apples",
-    a: "Fruit",
-    b: "Veggie",
-    c: "Meat",
-    d: "Diary",
-    answer: "Fruit"
+    ques: "Select the right function syntax",
+    choices: ["function[]", "var = function[]", "var myFunction = function() {}", "my Function = function() []"],
+    answer: "var myFunction = function() {}"
+  },
+  {
+    ques: "What is the correct selector to select an element by it's ID",
+    choices: [".", "*", "#", "="],
+    answer: "#"    
   }
 ]
 
 
+const createQuestion = function(content) {
+
+  var divEl = document.createElement("div")
+  divEl.className ="p-3 text-center"
+  mainDisplayEl.appendChild(divEl)
+
+  var question = document.createElement("h2")
+  question.className = "p-2"
+  question.textContent = content
+  divEl.appendChild(question)
+}
+
+var createBtnEl = function(btnContent) {
+  var btnDiv = document.createElement("div")
+  btnDiv.className = "d-flex justify-content-center"
+  var btn = document.createElement("button");
+  btn.className = "btn btn-primary m-1";
+  btn.textContent = btnContent;
+  btnDiv.appendChild(btn)
+  mainDisplayEl.appendChild(btnDiv)
+  
+  btn.addEventListener("click", function(){
+      var selectedAnswer = btn.textContent;
+      
+      if (selectedAnswer === mainQuestion[qCounter].answer) {
+        var correctEl = document.createElement("h1")
+        correctEl.textContent = "Correct!"
+        correctEl.className = "text-center"
+        check.appendChild(correctEl)
+          qCounter = qCounter + 1;
+          score = score + 20;
+          timeleft = timeleft + 5
+          start();
+      } else {
+        var incorrectEl = document.createElement("h1")
+        incorrectEl.textContent = "Wrong!"
+        incorrectEl.className = "text-center"
+        check.appendChild(incorrectEl)
+          qCounter = qCounter + 1;
+          start();
+      }
+      setTimeout(function(){
+        
+          check.removeChild(check.firstChild)
+        
+      }, 400)
+  });
+};
+
+
+const finalDisplay = function(){
+  document.querySelector('#mainDisplay').innerHTML = ""
+  myStopFunction()
+  timerEl.remove()
+
+  var container = document.createElement("div")
+  container.className = "p-3 text-center"
+  var nameLabel = document.createElement("label")
+  nameLabel.textContent = "Your Initials here"
+  nameLabel.className = "p-2"
+  var nameInput = document.createElement("input")
+  nameInput.setAttribute("type", "text")
+  nameInput.setAttribute("id", "nameInput")
+  
+  var scoreDisplay = document.createElement("h2")
+  scoreDisplay.className = "text-center"
+  scoreDisplay.textContent = "Your score is " + score + " points."
+
+  var saveBtnDiv = document.createElement("div")
+  saveBtnDiv.className = "d-flex justify-content-center"
+  var saveBtn = document.createElement("button")
+  saveBtn.className = "btn btn-primary"
+  saveBtn.textContent = "Save"
+  saveBtn.setAttribute("id", "saveBtn")
+
+  container.appendChild(nameInput)
+  container.appendChild(nameLabel)
+
+  saveBtnDiv.appendChild(saveBtn)
+
+  mainDisplayEl.appendChild(container)
+  mainDisplayEl.appendChild(scoreDisplay)
+  mainDisplayEl.appendChild(saveBtnDiv)
+
+  saveBtn.addEventListener("click", function(){
+    playerObject = {"initials": nameInput.value, "score": score}
+    playersArray.push(playerObject)
+    localStorage.setItem("Player", JSON.stringify(playersArray))
+
+    window.location.href = "index2.html";
+  })
+}
+
+const viewScore = function() {
+  var playerInfo = localStorage.getItem("Player");
+
+  var player = JSON.parse(playerInfo);
+
+  document.querySelector('#mainDisplay').innerHTML = ""
+
+  var displayScoreEl = document.createElement("h2")
+  displayScoreEl.className = "text-center"
+  displayScoreEl.textContent = player[0].initials + " scored " + player[0].score + " points."
+
+  mainDisplayEl.appendChild(displayScoreEl)
+}
+
+const start = function() {
+  document.querySelector("#mainDisplay").innerHTML = "";
+
+  if (qCounter === mainQuestion.length) {
+    finalDisplay()
+  } else {
+      createQuestion(mainQuestion[qCounter].ques);
+
+      let qstnArray = mainQuestion[qCounter].choices
+      
+      for(var i = 0; i <qstnArray.length; i++){
+        createBtnEl(qstnArray[i]) 
+      }
+  };
+}
+
+const outOfTimeF = function() {
+  var outOfTime = timerEl.textContent 
+
+  if (outOfTime === "0" ) {
+    window.alert("You run out of time")
+    finalDisplay()
+  }
+}
+
 const countDown = function() {
-  var timeleft = 60;
   var downloadTimer = setInterval(function(){
     if(timeleft <= 0){
       clearInterval(downloadTimer);
     }
-    timer.textContent = timeleft;
+    timerEl.textContent = timeleft;
     timeleft -= 1;
+  }, 1000);
+}
+
+
+const myInterval = setInterval(function () {
+
+  outOfTimeF()
+
 }, 1000);
-}
 
-const initialGreating = function() {
-  var initialDivEl = document.createElement("div");
-  initialDivEl.className = "p-3 text-center";
-
-  var initialH2El = document.createElement("h2");
-  initialH2El.className = "display-4 p-2";
-  initialH2El.textContent = "Welcome to Code Quiz!"
-  initialDivEl.appendChild(initialH2El);
-
-  var initialPEl = document.createElement("p")
-  initialPEl.innerHTML = "Try to answer the following code-related questions within the time limit<br>Keep in mind that incorrect answer will penalize your score/time<br>by ten seconds!"
-  initialDivEl.appendChild(initialPEl);
-
-  mainDisplayEl.appendChild(initialDivEl)
-};
-
-
-
-
-const createQuestion = function() {
-  var divEl = document.createElement("div")
-  divEl.className ="p-3 text-center"
+function myStopFunction() {
+  clearInterval(myInterval);
 }
 
 
-initialGreating()
+startBtn.addEventListener("click", function(){
+  start();
+  countDown();
+});
 
-startBtn.addEventListener('click', countDown)
+viewScoreEl.addEventListener("click", function(){
+  viewScore()
+})
